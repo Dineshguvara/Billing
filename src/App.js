@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route }   from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
+
+import Layout from './common/Layout';
+import Dashboard from "./pages/Dashboard";
+
+import ItemForm from "./pages/items/ItemForm";
+
+import Parties from "./pages/parties/Parties"
+import PartiesForm from './pages/parties/PartiesForm';
+
+import Sales from './pages/sales/Sales'
+import SalesForm from "./pages/sales/SalesForm"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <>
+     <ChakraProvider>
+      <Routes>
+        <Route path='/' element={<Layout/>} >              
+          <Route index  element={<Dashboard/>} />
+          
+          <Route path="/item" element={<ItemForm/>} />
 
+          <Route path="/parties" element={<Parties/>} />
+          <Route path="/create_parties" element={<PartiesForm/>} />
+
+          <Route path="/sales" element={<Sales/>} />
+          <Route path="/create_sales" element={<SalesForm/>} />
+
+         
+        </Route>
+      </Routes>
+     </ChakraProvider>
+    </>
+  );
+
+  }
 export default App;
