@@ -19,7 +19,7 @@ const LinkItems = [
   { name: "Dashboard", icon: FiHome, to: "/" },
   { name: "Items", icon: FiTrendingUp, to: "item" },
   { name: "Parties", icon: FiTrendingUp, to: "parties" },
-  { name: "sales", icon: FiSettings, to: "sales" }
+  { name: "Sales", icon: FiSettings, to: "sales" } 
 ];
 
 export default function Sidebar({ children }) {

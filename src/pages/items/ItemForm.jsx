@@ -15,8 +15,8 @@ import {
     Flex,
     Heading,
     Checkbox,
-    RadioGroup,
-    Radio, Grid, GridItem,
+    RadioGroup,InputLeftAddon,
+    Radio, Grid, GridItem,InputGroup,InputRightAddon,
     Card, CardHeader, CardBody, CardFooter,
     Spacer, Text, StackDivider, Textarea
 } from "@chakra-ui/react";
@@ -210,13 +210,17 @@ function ItemForm() {
                                         <GridItem>
                                             <FormControl isInvalid={errors.conv_rate}>
                                                 <FormLabel  >  Conversation Rate </FormLabel>
+                                                <InputGroup>
+                                                <InputLeftAddon children='1JAR=' />
                                                 <Input
                                                     type="text"
-                                                    placeholder="Enter Conversation Rate"
+                                                    placeholder="Conversation Rate"
                                                     {...register("conv_rate", {
                                                         required: "Conversation Rate is Required",
                                                     })}
                                                 />
+                                                  <InputRightAddon children='LAD' />
+                                                </InputGroup>
                                                 <FormErrorMessage>
                                                     {errors.conv_rate && errors.conv_rate.message}
                                                 </FormErrorMessage>
@@ -254,6 +258,7 @@ function ItemForm() {
                                         <GridItem>
                                             <FormControl isInvalid={errors.open_stk}>
                                                 <FormLabel  > Opening Stocks </FormLabel>
+                                                <InputGroup>
                                                 <Input
                                                     type="text"
                                                     placeholder="Enter Opening Stocks "
@@ -261,6 +266,8 @@ function ItemForm() {
                                                         required: " Opening Stocks is Required",
                                                     })}
                                                 />
+                                                <InputRightAddon children='JAR' />
+                                                </InputGroup>
                                                 <FormErrorMessage>
                                                     {errors.open_stk && errors.open_stk.message}
                                                 </FormErrorMessage>
@@ -269,6 +276,7 @@ function ItemForm() {
                                         <GridItem>
                                             <FormControl isInvalid={errors.low_stk_unit}>
                                                 <FormLabel  >  Low Stock Unit </FormLabel>
+                                                <InputGroup>
                                                 <Input
                                                     type="text"
                                                     placeholder="Enter Low Stock Unit"
@@ -276,6 +284,8 @@ function ItemForm() {
                                                         required: "Low Stock Unit is Required",
                                                     })}
                                                 />
+                                                 <InputRightAddon children='JAR' />
+                                                </InputGroup>
                                                 <FormErrorMessage>
                                                     {errors.low_stk_unit && errors.low_stk_unit.message}
                                                 </FormErrorMessage>

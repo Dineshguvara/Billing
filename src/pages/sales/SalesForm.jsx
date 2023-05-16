@@ -23,9 +23,11 @@ import {
     Th,
     Td,
     TableContainer,
-    Radio, Grid, GridItem,
+    Radio, Grid, GridItem,InputGroup,
     Card, CardHeader, CardBody, CardFooter,
-    Spacer, Text, StackDivider, Textarea, PinInput
+    Spacer, Text, StackDivider, Textarea,  
+    InputRightAddon 
+
 } from "@chakra-ui/react";
 import { ArrowBackIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Select } from "chakra-react-select";
@@ -271,6 +273,8 @@ function SalesForm() {
                                 <GridItem >
                                     <FormControl isInvalid={errors.pay_terms}>
                                         <FormLabel >  Payment Terms </FormLabel>
+                                       
+                                        <InputGroup>                                      
                                         <Input
                                             type="text"
                                             placeholder="Enter Payment Terms"
@@ -278,9 +282,13 @@ function SalesForm() {
                                                 required: " Payment Terms is required",
                                             })}
                                         />
+                                         <InputRightAddon children='Days' />
+                                         </InputGroup>
                                         <FormErrorMessage>
                                             {errors.pay_terms && errors.pay_terms.message}
                                         </FormErrorMessage>
+                                      
+                                      
                                     </FormControl>
                                 </GridItem>
                                 <GridItem >

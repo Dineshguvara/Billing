@@ -10,8 +10,9 @@ import Parties from "./pages/parties/Parties"
 import PartiesForm from './pages/parties/PartiesForm';
 
 import Sales from './pages/sales/Sales'
-import SalesForm from "./pages/sales/SalesForm"
+import SalesForm from "./pages/sales/SalesForm";
 
+ 
 function App() {
   return (
     <>
@@ -27,6 +28,8 @@ function App() {
 
           <Route path="/sales" element={<Sales/>} />
           <Route path="/create_sales" element={<SalesForm/>} />
+
+         
 
          
         </Route>

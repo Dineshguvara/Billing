@@ -22,7 +22,7 @@ function Parties() {
 
 
     return (
-        <>
+        <> 
             <Box bg="white" p={5} mb={5} style={{ borderRadius: "10px" }}>
                 <Flex alignItems='center' gap={2}  >
                     <Link to="/">
