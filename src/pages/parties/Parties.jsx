@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 
 function Parties() {
 
-
+    const { parties } = useSelector((state)=> state.party)
 
     return (
         <> 
@@ -40,21 +40,37 @@ function Parties() {
             < Box p={5} color="black" bg="white" style={{ borderRadius: "10px" }}>
 
                 <TableContainer mt={8}>
-                    <Table variant='striped' >
-                    <TableCaption>  No Parties To Display</TableCaption>
+                    <Table variant='simple' >
+                    
                         <Thead bg="#f2f2f2">
                             <Tr>
                                 <Th> #</Th>
-                                <Th> Name</Th>
+                                <Th> Party Name</Th>
                                 <Th> Mobile Number </Th>
-                                <Th> Type  </Th>
-                                <Th> Balance </Th>
+                                <Th> Party Type  </Th>
+                                <Th> OPening Balance </Th>
                                 <Th> Act  </Th>
-
                             </Tr>
                         </Thead>
                         <Tbody>
-
+                        { parties &&
+                                parties.map((item, index)=>{                                  
+                                    return( 
+                                        <Tr key={index}>
+                                            <Td>{index+1}</Td>                                        
+                                            <Td>{item.party_name}</Td>                                           
+                                            <Td>{item.mob_num}</Td>
+                                            <Td>{item.party_type.label}</Td>                                             
+                                            <Td>{item.open_bal}</Td>
+                                            <Td>
+                                                <EditIcon/> &nbsp;  
+                                                <DeleteIcon/>                                           
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })                 
+                            }
+                            
                         </Tbody>
                     </Table>
 

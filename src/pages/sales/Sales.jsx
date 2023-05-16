@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 
 function Sales() {
 
-
+    const { Sales } = useSelector((state) => state.sale)
 
     return (
         <>
@@ -36,26 +36,41 @@ function Sales() {
                     <Link to={'/create_Sales'}>
                         <Button mr={10} colorScheme='teal'>  Add New  &nbsp; ( + )</Button>
                     </Link>
-                    
+
                 </Flex>
             </Box>
             < Box p={5} color="black" bg="white" style={{ borderRadius: "10px" }}>
 
                 <TableContainer mt={8}>
-                    <Table variant='striped' >
-                    <TableCaption>  No Sales To Display</TableCaption>
+                    <Table variant='simple' >
                         <Thead bg="#f2f2f2">
                             <Tr>
                                 <Th> #</Th>
-                                <Th> Date</Th>
+                                <Th> Customer Name  </Th>
                                 <Th> Invoice Number </Th>
-                                <Th> Party Name  </Th>
                                 <Th> Amount </Th>
+                                <Th> Invoice Date</Th>
                                 <Th> Act  </Th>
                             </Tr>
                         </Thead>
                         <Tbody>
-
+                            {Sales &&
+                                Sales.map((item, index) => {
+                                    return (
+                                        <Tr key={index}>
+                                            <Td>{index + 1}</Td>
+                                            <Td>{item.customer.label}</Td>
+                                            <Td>{item.inv_num}</Td>
+                                            <Td>{item.inv_date}</Td>
+                                            <Td>{item.amount}</Td>
+                                            <Td>
+                                                <EditIcon /> &nbsp;
+                                                <DeleteIcon />
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })
+                            }
                         </Tbody>
                     </Table>
 

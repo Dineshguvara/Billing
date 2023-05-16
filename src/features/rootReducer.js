@@ -1,8 +1,11 @@
-import { combineReducers  } from "@reduxjs/toolkit";
-import posteReducer from "./newSlice"
- 
+import { combineReducers } from "@reduxjs/toolkit";
+import partyReducer from "./parties";
+import itemReducer from "./items";
+import saleReducer from "./sales";
 const rootReducer = combineReducers({
-    poste: posteReducer,
+    party:partyReducer,
+    item:itemReducer,
+    sale:saleReducer
 });
  
 export default rootReducer;

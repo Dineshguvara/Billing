@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
     Box,
@@ -23,15 +22,15 @@ import {
     Th,
     Td,
     TableContainer,
-    Radio, Grid, GridItem,InputGroup,
+    Radio, Grid, GridItem, InputGroup,
     Card, CardHeader, CardBody, CardFooter,
-    Spacer, Text, StackDivider, Textarea,  
-    InputRightAddon 
+    Spacer, Text, StackDivider, Textarea,
+    InputRightAddon
 
 } from "@chakra-ui/react";
 import { ArrowBackIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Select } from "chakra-react-select";
-
+import { setSales } from "../../features/sales";
 
 const Customer = [
     {
@@ -122,6 +121,8 @@ const items = [
 
 function SalesForm() {
 
+    const navi = useNavigate();
+    const dispatch = useDispatch();
 
     const [total, setTotal] = useState(0);
 
@@ -131,8 +132,8 @@ function SalesForm() {
         formState: { errors },
         control,
         setValue,
-    getValues,
-    watch,
+        getValues,
+        watch,
     } = useForm({ mode: "onChange" });
 
     const {
@@ -144,9 +145,11 @@ function SalesForm() {
         name: "Items",
     });
 
-    
+
     const onSubmit = async (data) => {
         console.log(data);
+        dispatch(setSales(data));
+        navi("/sales")
     }
     const watchItems = watch("Items");
 
@@ -194,9 +197,6 @@ function SalesForm() {
                     <Heading as="h3" size="lg"  >
                         create Invoice
                     </Heading>
-                    <Spacer />
-                    <Button type="submit" size="md"
-                        colorScheme="teal" onClick={handleSubmit(onSubmit)}> save </Button>
                 </Flex>
             </Box>
 
@@ -273,22 +273,22 @@ function SalesForm() {
                                 <GridItem >
                                     <FormControl isInvalid={errors.pay_terms}>
                                         <FormLabel >  Payment Terms </FormLabel>
-                                       
-                                        <InputGroup>                                      
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter Payment Terms"
-                                            {...register("pay_terms", {
-                                                required: " Payment Terms is required",
-                                            })}
-                                        />
-                                         <InputRightAddon children='Days' />
-                                         </InputGroup>
+
+                                        <InputGroup>
+                                            <Input
+                                                type="text"
+                                                placeholder="Enter Payment Terms"
+                                                {...register("pay_terms", {
+                                                    required: " Payment Terms is required",
+                                                })}
+                                            />
+                                            <InputRightAddon children='Days' />
+                                        </InputGroup>
                                         <FormErrorMessage>
                                             {errors.pay_terms && errors.pay_terms.message}
                                         </FormErrorMessage>
-                                      
-                                      
+
+
                                     </FormControl>
                                 </GridItem>
                                 <GridItem >
@@ -313,199 +313,203 @@ function SalesForm() {
             </Box>
 
             <Box p={5} my={5} color="black" bg="white" style={{ borderRadius: "10px" }}>
-                <TableContainer style={{ overflowX: "visible", overflowY: "visible" }}  >
-                    <Table variant="simple" size="sm">
-                        <Thead>
-                            <Tr>
-                                <Th> No </Th>
-                                <Th w={300}> Items </Th>
-                                <Th> HSN </Th>
-                                <Th> MRP </Th>
-                                <Th> QTY </Th>
-                                <Th> Price </Th>
-                                <Th> Discount (Rs) </Th>
-                                <Th> Tax (%) </Th>
-                                <Th> Amount </Th>
-                                <Th> Act </Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {itemFields &&
-                                itemFields.map((item, index) => {
-                                    return (
-                                        <Tr key={item.id}>
-                                            <Td> {index + 1} </Td>
-                                            <Td>
-                                                <Controller
-                                                    control={control}
-                                                    name={`Items.${index}.item`}
-                                                    rules={{
-                                                        required: "Please Select Item.",
-                                                    }}
-                                                    render={({
-                                                        field: { onChange, onBlur, value, name, ref },
-                                                    }) => (
-                                                        <FormControl
-                                                            isInvalid={errors.Items?.[index]?.item}
-                                                        >
-                                                            <Select
-                                                                className="z-index"
-                                                                name={name}
-                                                                ref={ref}
-                                                                onChange={(e) => {
-                                                                    onChange(e);
-                                                                    itemChange(e, index);
-                                                                }}
-                                                                onBlur={onBlur}
-                                                                value={value}
-                                                                options={items}
-                                                                getOptionLabel={(e) => e.itemName}
-                                                                getOptionValue={(e) => e.id}
-                                                                placeholder="Select item"
-                                                                closeMenuOnSelect={true}
-                                                                size="sm"
-                                                            />
-                                                            <FormErrorMessage>
-                                                                {errors.Items?.[index]?.item?.message}
-                                                            </FormErrorMessage>
-                                                        </FormControl>
-                                                    )}
-                                                />
-                                            </Td>
-
-                                            <Td>
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="HSN"
-                                                        {...register(`Items.${index}.hsn`)}
-                                                        disabled={true}
-                                                        size="sm"
+                <Stack>
+                    <TableContainer style={{ overflowX: "visible", overflowY: "visible" }}  >
+                        <Table variant="simple" size="sm">
+                            <Thead>
+                                <Tr>
+                                    <Th> No </Th>
+                                    <Th w={300}> Items </Th>
+                                    <Th> HSN </Th>
+                                    <Th> MRP </Th>
+                                    <Th> QTY </Th>
+                                    <Th> Price </Th>
+                                    <Th> Discount (Rs) </Th>
+                                    <Th> Tax (%) </Th>
+                                    <Th> Amount </Th>
+                                    <Th> Act </Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {itemFields &&
+                                    itemFields.map((item, index) => {
+                                        return (
+                                            <Tr key={item.id}>
+                                                <Td> {index + 1} </Td>
+                                                <Td>
+                                                    <Controller
+                                                        control={control}
+                                                        name={`Items.${index}.item`}
+                                                        rules={{
+                                                            required: "Please Select Item.",
+                                                        }}
+                                                        render={({
+                                                            field: { onChange, onBlur, value, name, ref },
+                                                        }) => (
+                                                            <FormControl
+                                                                isInvalid={errors.Items?.[index]?.item}
+                                                            >
+                                                                <Select
+                                                                    className="z-index"
+                                                                    name={name}
+                                                                    ref={ref}
+                                                                    onChange={(e) => {
+                                                                        onChange(e);
+                                                                        itemChange(e, index);
+                                                                    }}
+                                                                    onBlur={onBlur}
+                                                                    value={value}
+                                                                    options={items}
+                                                                    getOptionLabel={(e) => e.itemName}
+                                                                    getOptionValue={(e) => e.id}
+                                                                    placeholder="Select item"
+                                                                    closeMenuOnSelect={true}
+                                                                    size="sm"
+                                                                />
+                                                                <FormErrorMessage>
+                                                                    {errors.Items?.[index]?.item?.message}
+                                                                </FormErrorMessage>
+                                                            </FormControl>
+                                                        )}
                                                     />
-                                                </FormControl>
-                                            </Td>
+                                                </Td>
 
-                                            <Td isNumeric>
-                                                <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="MRP"
-                                                        {...register(`Items.${index}.mrp`)}
-                                                        disabled={true}
+                                                <Td>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="HSN"
+                                                            {...register(`Items.${index}.hsn`)}
+                                                            disabled={true}
+                                                            size="sm"
+                                                        />
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="MRP"
+                                                            {...register(`Items.${index}.mrp`)}
+                                                            disabled={true}
+                                                            size="sm"
+                                                            className="textRight"
+                                                        />
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl isInvalid={errors.Items?.[index]?.qty}>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Qty"
+                                                            {...register(`Items.${index}.qty`, {
+                                                                required: "Qty is Empty",
+                                                                onChange: (e) =>
+                                                                    itemPropChange(index, "qty", e.target.value),
+                                                            })}
+                                                            size="sm"
+                                                        />
+                                                        <FormErrorMessage>
+                                                            {errors.Items?.[index]?.qty?.message}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl isInvalid={errors.Items?.[index]?.price}>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Price"
+                                                            {...register(`Items.${index}.price`, {
+                                                                required: "Please Enter Price",
+                                                                onChange: (e) =>
+                                                                    itemPropChange(
+                                                                        index,
+                                                                        "price",
+                                                                        e.target.value
+                                                                    ),
+                                                            })}
+                                                            size="sm"
+                                                            className="textRight"
+                                                        />
+                                                        <FormErrorMessage>
+                                                            {errors.Items?.[index]?.price?.message}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="Discount"
+                                                            {...register(`Items.${index}.discount`, {
+                                                                onChange: (e) =>
+                                                                    itemPropChange(
+                                                                        index,
+                                                                        "discount",
+                                                                        e.target.value
+                                                                    ),
+                                                            })}
+                                                            size="sm"
+                                                        />
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="Tax (%)"
+                                                            {...register(`Items.${index}.tax`)}
+                                                            disabled={true}
+                                                            size="sm"
+                                                        />
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td isNumeric>
+                                                    <FormControl
+                                                        isInvalid={errors.Items?.[index]?.amount}
+                                                    >
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="Amount"
+                                                            {...register(`Items.${index}.amount`)}
+                                                            size="sm"
+                                                            className="textRight"
+                                                            disabled={true}
+                                                        />
+                                                        <FormErrorMessage>
+                                                            {errors.Items?.[index]?.amount?.message}
+                                                        </FormErrorMessage>
+                                                    </FormControl>
+                                                </Td>
+
+                                                <Td>
+                                                    <Button
+                                                        colorScheme="blue"
+                                                        onClick={() => removeItem(index)}
                                                         size="sm"
-                                                        className="textRight"
-                                                    />
-                                                </FormControl>
-                                            </Td>
+                                                    >
+                                                        <DeleteIcon w={3} h={3} />
+                                                    </Button>
+                                                </Td>
+                                            </Tr>
+                                        );
+                                    })}
 
-                                            <Td isNumeric>
-                                                <FormControl isInvalid={errors.Items?.[index]?.qty}>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Qty"
-                                                        {...register(`Items.${index}.qty`, {
-                                                            required: "Qty is Empty",
-                                                            onChange: (e) =>
-                                                                itemPropChange(index, "qty", e.target.value),
-                                                        })}
-                                                        size="sm"
-                                                    />
-                                                    <FormErrorMessage>
-                                                        {errors.Items?.[index]?.qty?.message}
-                                                    </FormErrorMessage>
-                                                </FormControl>
-                                            </Td>
+                            </Tbody>
 
-                                            <Td isNumeric>
-                                                <FormControl isInvalid={errors.Items?.[index]?.price}>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Price"
-                                                        {...register(`Items.${index}.price`, {
-                                                            required: "Please Enter Price",
-                                                            onChange: (e) =>
-                                                                itemPropChange(
-                                                                    index,
-                                                                    "price",
-                                                                    e.target.value
-                                                                ),
-                                                        })}
-                                                        size="sm"
-                                                        className="textRight"
-                                                    />
-                                                    <FormErrorMessage>
-                                                        {errors.Items?.[index]?.price?.message}
-                                                    </FormErrorMessage>
-                                                </FormControl>
-                                            </Td>
+                        </Table>
+                    </TableContainer>
 
-                                            <Td isNumeric>
-                                                <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="Discount"
-                                                        {...register(`Items.${index}.discount`, {
-                                                            onChange: (e) =>
-                                                                itemPropChange(
-                                                                    index,
-                                                                    "discount",
-                                                                    e.target.value
-                                                                ),
-                                                        })}
-                                                        size="sm"
-                                                    />
-                                                </FormControl>
-                                            </Td>
-
-                                            <Td isNumeric>
-                                                <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="Tax (%)"
-                                                        {...register(`Items.${index}.tax`)}
-                                                        disabled={true}
-                                                        size="sm"
-                                                    />
-                                                </FormControl>
-                                            </Td>
-
-                                            <Td isNumeric>
-                                                <FormControl
-                                                    isInvalid={errors.Items?.[index]?.amount}
-                                                >
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="Amount"
-                                                        {...register(`Items.${index}.amount`)}
-                                                        size="sm"
-                                                        className="textRight"
-                                                        disabled={true}
-                                                    />
-                                                    <FormErrorMessage>
-                                                        {errors.Items?.[index]?.amount?.message}
-                                                    </FormErrorMessage>
-                                                </FormControl>
-                                            </Td>
-
-                                            <Td>
-                                                <Button
-                                                    colorScheme="blue"
-                                                    onClick={() => removeItem(index)}
-                                                    size="sm"
-                                                >
-                                                    <DeleteIcon w={3} h={3} />
-                                                </Button>
-                                            </Td>
-                                        </Tr>
-                                    );
-                                })}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
-                <Stack mt={20}>
-                    <  Button colorScheme="teal" onClick={() => appendItem()}   >
+                    <Button colorScheme="blue" onClick={() => appendItem()} mt={10} float="right">
                         Add New Item
                     </Button>
+
                 </Stack>
             </Box>
 
@@ -520,7 +524,6 @@ function SalesForm() {
                                 <Td> </Td>
                                 <Td> </Td>
                                 <Td> </Td>
-
                                 <Td> Sub Total</Td>
                                 <Td> 0  </Td>
                                 <Td> 0</Td>
@@ -576,9 +579,12 @@ function SalesForm() {
 
             </Box>
 
-
-
-
+            <Box p={5} bg="white" mt={3}>
+                <Stack>
+                    <Button type="submit" size="md"
+                        colorScheme="teal" onClick={handleSubmit(onSubmit)}>  SUBMIT </Button>
+                </Stack>
+            </Box>
         </>
     );
 }

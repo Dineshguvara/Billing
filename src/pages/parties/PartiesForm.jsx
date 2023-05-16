@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
     Box,
@@ -15,14 +13,15 @@ import {
     Flex,
     Heading,
     Checkbox,
-    RadioGroup,InputLeftAddon,
-    Radio, Grid, GridItem,InputGroup,InputRightAddon,
+    RadioGroup, InputLeftAddon,
+    Radio, Grid, GridItem, InputGroup, InputRightAddon,
     Card, CardHeader, CardBody, CardFooter,
     Spacer, Text, StackDivider, Textarea, PinInput
 } from "@chakra-ui/react";
 import { ArrowBackIcon, AddIcon } from "@chakra-ui/icons";
 import { Select } from "chakra-react-select";
-
+import { useSelector, useDispatch } from "react-redux";
+import { setParties } from "../../features/parties";
 
 const partyType = [
     {
@@ -55,6 +54,8 @@ const state = [
 
 
 function PartiesForm() {
+
+    const navi = useNavigate();
     const {
         register,
         control,
@@ -62,8 +63,12 @@ function PartiesForm() {
         formState: { errors },
     } = useForm();
 
+    const dispatch = useDispatch();
+
     const onSubmit = async (data) => {
         console.log(data);
+        dispatch(setParties(data));
+        navi("/parties")
     }
 
     return (
@@ -76,12 +81,8 @@ function PartiesForm() {
                     <Heading as="h3" size="lg"  >
                         create Parties
                     </Heading>
-                    <Spacer />
-                    <Button type="submit" size="md"
-                        colorScheme="teal" onClick={handleSubmit(onSubmit)}> save </Button>
                 </Flex>
             </Box>
-
 
             <Box p={4} color="black" bg="white" style={{ borderRadius: "10px" }}>
                 <Card>
@@ -139,7 +140,7 @@ function PartiesForm() {
                                             <FormControl isInvalid={errors.open_bal}>
                                                 <FormLabel   > Openig Balance </FormLabel>
                                                 <Input
-                                                    type="text"
+                                                    type="number"
                                                     placeholder="Enter Openig Balance"
                                                     {...register("open_bal", {
                                                         required: "Openig Balance is required",
@@ -280,35 +281,35 @@ function PartiesForm() {
                                         <GridItem >
                                             <FormControl isInvalid={errors.credit_period}>
                                                 <FormLabel >  Credit Period </FormLabel>
-                                                <InputGroup>  
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Enter Credit Period"
-                                                    {...register("credit_period", {
-                                                        required: " Credit Period is required",
-                                                    })}
-                                                />
-                                                <InputRightAddon children='Days' />
+                                                <InputGroup>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Enter Credit Period"
+                                                        {...register("credit_period", {
+                                                            required: " Credit Period is required",
+                                                        })}
+                                                    />
+                                                    <InputRightAddon children='Days' />
                                                 </InputGroup>
                                                 <FormErrorMessage>
                                                     {errors.credit_period && errors.credit_period.message}
                                                 </FormErrorMessage>
-                                               
+
                                             </FormControl>
                                         </GridItem>
                                         <GridItem >
                                             <FormControl isInvalid={errors.credit_limit}>
                                                 <FormLabel   > credit Limit </FormLabel>
-                                                <InputGroup>  
-                                                <InputLeftAddon children='@' />
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Enter credit Limit"
-                                                    {...register("credit_limit", {
-                                                        required: "credit Limit is required",
-                                                    })}
-                                                />
-                                                 </InputGroup>
+                                                <InputGroup>
+                                                    <InputLeftAddon children='@' />
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Enter credit Limit"
+                                                        {...register("credit_limit", {
+                                                            required: "credit Limit is required",
+                                                        })}
+                                                    />
+                                                </InputGroup>
                                                 <FormErrorMessage>
                                                     {errors.credit_limit && errors.credit_limit.message}
                                                 </FormErrorMessage>
@@ -318,13 +319,11 @@ function PartiesForm() {
                                 </Stack>
                             </Box>
                         </Stack>
+                        <Button type="submit" size="md" float="right" mt={5}
+                            colorScheme="teal" onClick={handleSubmit(onSubmit)}> SUBMIT </Button>
                     </CardBody>
                 </Card>
             </Box>
-
-
-
-
         </>
     );
 }
