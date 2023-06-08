@@ -25,7 +25,12 @@ import {
     Radio, Grid, GridItem, InputGroup,
     Card, CardHeader, CardBody, CardFooter,
     Spacer, Text, StackDivider, Textarea,
-    InputRightAddon
+    InputRightAddon,
+    List,
+    ListItem,
+    ListIcon,
+    OrderedList,
+    UnorderedList,
 
 } from "@chakra-ui/react";
 import { ArrowBackIcon, DeleteIcon } from "@chakra-ui/icons";
@@ -145,17 +150,40 @@ function SalesForm() {
         name: "Items",
     });
 
+    const {
+        fields: itemFields1,
+        append: appendItem1,
+        remove: removeItem1,
+    } = useFieldArray({
+        control,
+        name: "Item",
+    });
+
+    const {
+        fields: itemFields2,
+        append: appendItem2,
+        remove: removeItem2,
+    } = useFieldArray({
+        control,
+        name: "items",
+    });
 
     const onSubmit = async (data) => {
-        console.log(data);
+        console.log(JSON.stringify(data));
+        console.log(data)
         dispatch(setSales(data));
-        navi("/sales")
+        navi("/sales_list")
     }
     const watchItems = watch("Items");
 
     if (itemFields.length === 0) {
         appendItem();
     }
+    // if (itemFields1.length === 0) {
+    //     appendItem1();
+    // }
+
+
 
     const itemChange = (e, index) => {
         setValue(`Items.${index}.item.itemName`, e.itemName);
@@ -229,6 +257,7 @@ function SalesForm() {
                                         getOptionValue={(e) => e.value}
                                         placeholder="Select Customer"
                                         closeMenuOnSelect={true}
+                                        
                                     />
                                     <FormErrorMessage>
                                         {error && error.message}
@@ -239,7 +268,7 @@ function SalesForm() {
                     </GridItem>
                     <GridItem colSpan={2} p={5}>
                         <Stack spacing={10}>
-                            <Grid templateColumns='repeat(2, 1fr)' gap={10}>
+                            <Grid templateColumns='repeat(2, 1fr)' gap={5}>
                                 <GridItem >
                                     <FormControl isInvalid={errors.inv_num}>
                                         <FormLabel >  Invoice Number </FormLabel>
@@ -249,6 +278,7 @@ function SalesForm() {
                                             {...register("inv_num", {
                                                 required: " Invoice Number is required",
                                             })}
+                                             
                                         />
                                         <FormErrorMessage>
                                             {errors.inv_num && errors.inv_num.message}
@@ -263,7 +293,7 @@ function SalesForm() {
 
                                             {...register("inv_date", {
                                                 required: "Invoice Date is required",
-                                            })}
+                                            })}  
                                         />
                                         <FormErrorMessage>
                                             {errors.inv_date && errors.inv_date.message}
@@ -280,7 +310,7 @@ function SalesForm() {
                                                 placeholder="Enter Payment Terms"
                                                 {...register("pay_terms", {
                                                     required: " Payment Terms is required",
-                                                })}
+                                                })}   
                                             />
                                             <InputRightAddon children='Days' />
                                         </InputGroup>
@@ -296,11 +326,10 @@ function SalesForm() {
                                         <FormLabel   >  Due Date  </FormLabel>
                                         <Input
                                             type="date"
-
                                             {...register("due_date", {
                                                 required: "Due Date is required",
-                                            })}
-                                        />
+                                            })}  
+                                        /> 
                                         <FormErrorMessage>
                                             {errors.due_date && errors.due_date.message}
                                         </FormErrorMessage>
@@ -480,14 +509,14 @@ function SalesForm() {
                                                             {...register(`Items.${index}.amount`)}
                                                             size="sm"
                                                             className="textRight"
-                                                            disabled={true}
+                                                            disabled={true} 
+                                                           
                                                         />
                                                         <FormErrorMessage>
                                                             {errors.Items?.[index]?.amount?.message}
                                                         </FormErrorMessage>
                                                     </FormControl>
                                                 </Td>
-
                                                 <Td>
                                                     <Button
                                                         colorScheme="blue"
@@ -534,48 +563,229 @@ function SalesForm() {
                 </TableContainer>
             </Box>
 
-            <Box p={0} my={5} color="black" bg="white" style={{ borderRadius: "10px" }}>
+            <Box p={5} my={5} color="black" bg="white" style={{ borderRadius: "10px" }}>
 
-                <Grid templateColumns='repeat(2, 1fr)' gap={4} >
-                    <Card  >
-                        <CardBody>
-                            <Stack spacing={10} divider={<StackDivider />}>
-                                <GridItem  >
-                                    <Stack spacing={6}>
-                                        <FormControl isInvalid={errors.notes}>
-                                            <FormLabel>  Notes </FormLabel>
-                                            <Textarea
-                                                type="text"
-                                                placeholder="Enter the Notes Here"
-                                                {...register("notes", {
-                                                    required: "Notes is required",
-                                                })}
-                                            />
-                                            <FormErrorMessage>
-                                                {errors.notes && errors.notes.message}
-                                            </FormErrorMessage>
-                                        </FormControl>
-                                        <FormControl isInvalid={errors.terms_condition}>
-                                            <FormLabel>  Terms & Condition </FormLabel>
-                                            <Textarea
-                                                type="text"
-                                                placeholder="Enter Terms & Condition"
-                                                {...register("terms_condition", {
-                                                    required: "Terms & Condition is required",
-                                                })}
-                                            />
-                                            <FormErrorMessage>
-                                                {errors.terms_condition && errors.terms_condition.message}
-                                            </FormErrorMessage>
-                                        </FormControl>
-                                    </Stack>
-                                </GridItem>
+                <Flex  >
+                    <Box flex="1" p={5}>
+                        <Stack spacing={6} divider={<StackDivider />}>
+                            <>
+                                <FormControl isInvalid={errors.notes} mb={5}>
+                                    <FormLabel>  Notes </FormLabel>
+                                    <Textarea
+                                        type="text"
+                                        placeholder="Enter the Notes Here"
+                                        {...register("notes", {
+                                            required: "Notes is required",
+                                        })}   size="sm"
+                                    />
+                                    <FormErrorMessage>
+                                        {errors.notes && errors.notes.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                                <FormControl isInvalid={errors.terms_condition}>
+                                    <FormLabel>  Terms & Condition </FormLabel>
+                                    <Textarea
+                                        type="text"
+                                        placeholder="Enter Terms & Condition"
+                                        {...register("terms_condition", {
+                                            required: "Terms & Condition is required",
+                                        })} size="sm"
+                                    />
+                                    <FormErrorMessage>
+                                        {errors.terms_condition && errors.terms_condition.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                            </>
+                            <>
+                                <Heading as="h6" fontSize="13px"> Bank Details </Heading>
+                                <UnorderedList>
+                                    <ListItem> Bank Name :  SBI</ListItem>
+                                    <ListItem> Bank Name :  SBI</ListItem>
+                                    <ListItem> Bank Name :  SBI</ListItem>
+                                </UnorderedList>
+                            </>
+                        </Stack>
+                    </Box>
+                    <Box flex="1" p={5} >
+                        <Stack spacing={5} divider={<StackDivider />} >
+                            <>
+                                <Flex mb={2}>
+                                    <Heading as="h6" fontSize="13px">Total value </Heading><Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                                <Flex mb={2}>
+                                    <Heading as="h6" fontSize="13px">SGST </Heading><Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                                <Flex mb={2}>
+                                    <Heading as="h6" fontSize="13px">CGST </Heading><Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                                <Flex mb={2}>
+                                    <Heading as="h6" fontSize="13px">IGST </Heading><Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                            </>
+                            <>
+                                <Flex   >
+                                    <Button onClick={() => appendItem1()} >Add Aditional Item</Button> <Spacer />
+                                    <Heading as="h6" fontSize="13px">  Rs </Heading>
+                                </Flex>
+                                <Stack>
+                                    {itemFields1 &&
+                                        itemFields1.map((item1, indx) => {
+                                            return (
+                                                <>
+                                                    <TableContainer mb={2}>
+                                                        <Table>
+                                                            <Tbody>
+                                                                <Tr key={indx}>
+                                                                    <Td>
+                                                                        <FormControl isInvalid={errors.Item?.[indx]?.charge}  >
+                                                                            <Input
+                                                                                type="text"
+                                                                                placeholder="Addition Item"
+                                                                                {...register(`Item.${indx}.charge`, {
+                                                                                    required: "Addition Item is Required"
+                                                                                })}   size="sm"
 
-                                <GridItem />
-                            </Stack>
-                        </CardBody>
-                    </Card>
-                </Grid>
+                                                                            />
+                                                                            <FormErrorMessage>
+                                                                                {errors.Item?.[indx]?.charge?.message}
+                                                                            </FormErrorMessage>
+                                                                        </FormControl>
+                                                                    </Td>
+                                                                    <Td>
+                                                                        <FormControl isInvalid={errors.Item?.[indx]?.ch_amount}  >
+                                                                            <Input
+                                                                                type="number"
+                                                                                placeholder="Item Charge"
+                                                                                {...register(`Item.${indx}.ch_amount`, {
+                                                                                    required: "Item Charge is Required"
+                                                                                })}   size="sm"
+
+                                                                            />
+                                                                            <FormErrorMessage>
+                                                                                {errors.Item?.[indx]?.ch_amount?.message}
+                                                                            </FormErrorMessage>
+                                                                        </FormControl>
+                                                                    </Td>
+                                                                    <Td>
+                                                                        <Button
+
+                                                                            onClick={() => removeItem1(indx)}
+                                                                            colorScheme="red"
+                                                                        >
+                                                                            <DeleteIcon w={4} h={4} />
+                                                                        </Button>
+                                                                    </Td>
+                                                                </Tr>
+                                                            </Tbody>
+                                                        </Table>
+                                                    </TableContainer>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </Stack>
+                                <Flex mt={2} mb={2}>
+                                    <Button onClick={() => appendItem2()} >Add Discount </Button> <Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                                <Stack>
+                                    {itemFields2 &&
+                                        itemFields2.map((itm1, indx) => {
+                                            return (
+                                                <>
+                                                    <TableContainer mb={2}>
+                                                        <Table>
+                                                            <Tbody>
+                                                                <Tr key={indx}>
+                                                                    <Td>
+                                                                        <FormControl isInvalid={errors.items?.[indx]?.disco}  >
+                                                                            <Input
+                                                                                type="text"
+                                                                                placeholder="Add Discount"
+                                                                                {...register(`items.${indx}.disco`, {
+                                                                                    required: "Add Discount is Required"
+                                                                                })}
+                                                                                size="sm"
+                                                                            />
+                                                                            <FormErrorMessage>
+                                                                                {errors.items?.[indx]?.disco?.message}
+                                                                            </FormErrorMessage>
+                                                                        </FormControl>
+                                                                    </Td>
+                                                                    
+                                                                    <Td>
+                                                                        <Button
+
+                                                                            onClick={() => removeItem2(indx)}
+                                                                            colorScheme="red"
+                                                                        >
+                                                                            <DeleteIcon w={4} h={4} />
+                                                                        </Button>
+                                                                    </Td>
+                                                                </Tr>
+                                                            </Tbody>
+                                                        </Table>
+                                                    </TableContainer>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </Stack>
+
+                            </>
+                            <>
+                                <Flex mb={2}>
+                                    <Heading as="h6" fontSize="13px">Total </Heading><Spacer />
+                                    <Heading as="h6" fontSize="13px"> 0</Heading>
+                                </Flex>
+                            </>
+                            <>
+                                <Flex mb={2}>
+                                    <FormLabel minWidth="150px"  >  Amount received </FormLabel>
+                                    <FormControl isInvalid={errors.amount_received} maxWidth="180px" ml="150px">
+
+                                        <Input
+                                            type="number"
+                                            {...register("amount_received", {
+                                                required: "Notes is required",
+                                            })}  size="sm"
+                                        />
+                                        <FormErrorMessage>
+                                            {errors.amount_received && errors.amount_received.message}
+                                        </FormErrorMessage>
+                                    </FormControl>
+
+                                </Flex>
+                            </>
+                            <>
+                                <Flex mb={2}>
+                                    <FormLabel minWidth="150px" > Balance Amount </FormLabel>
+                                    <FormControl isInvalid={errors.balance_amount} maxWidth="180px" ml="150px">
+
+                                        <Input
+
+                                            type="number"
+                                            {...register("balance_amount", {
+                                                required: "Notes is required",
+                                            })}
+                                            size="sm"
+                                        />
+                                        <FormErrorMessage>
+                                            {errors.balance_amount && errors.balance_amount.message}
+                                        </FormErrorMessage>
+                                    </FormControl>
+                                </Flex>
+                            </>
+
+                        </Stack>
+                    </Box>
+                </Flex>
+
+
 
             </Box>
 

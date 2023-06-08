@@ -8,18 +8,22 @@ import {
   Icon,
   useColorModeValue,
   Link,
-  Drawer,
+  Drawer,Switch,
   DrawerContent,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiHome, FiTrendingUp, FiSettings, FiMenu } from "react-icons/fi";
+import { FiHome, FiTrendingUp, FiSettings, FiMenu, FiTruck, FiPackage, FiUser } from "react-icons/fi";
+import { useSelector, useDispatch } from "react-redux";
+import { setNavSize } from "../features/navSlice";
 
 const LinkItems = [
-  { name: "Dashboard", icon: FiHome, to: "/" },
-  { name: "Items", icon: FiTrendingUp, to: "item" },
-  { name: "Parties", icon: FiTrendingUp, to: "parties" },
-  { name: "Sales", icon: FiSettings, to: "sales" } 
+  { name: "DASHBOARD", icon: FiHome, to: "/" },
+  { name: "ITEMS", icon: FiPackage, to: "items_list" },
+  { name: "PARTIES", icon: FiUser, to: "parties_list" },
+  { name: "SALES", icon: FiTruck, to: "sales_list" } ,
+  // { name: "practice", icon: FiTruck, to: "pc" } ,
+  
 ];
 
 export default function Sidebar({ children }) {
@@ -53,6 +57,14 @@ export default function Sidebar({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
+
+  const dispatch = useDispatch();
+
+  const { navSiz } = useSelector((state)=> state.poste.value)
+
+   
+ 
+ 
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -61,13 +73,20 @@ const SidebarContent = ({ onClose, ...rest }) => {
       w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
+    
       {...rest}
+      onMouseOver={()=>dispatch(setNavSize())} 
+      onMouseOut={()=>dispatch(setNavSize())}
+      
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Billing
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <Switch size='sm' 
+        onClick={()=>dispatch()}
+        />
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon} to={link.to}>

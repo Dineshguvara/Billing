@@ -66,9 +66,9 @@ function PartiesForm() {
     const dispatch = useDispatch();
 
     const onSubmit = async (data) => {
-        console.log(data);
+        console.log(JSON.stringify(data));
         dispatch(setParties(data));
-        navi("/parties")
+        navi("/parties_list")
     }
 
     return (

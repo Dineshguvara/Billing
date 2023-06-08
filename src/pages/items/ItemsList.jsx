@@ -17,9 +17,9 @@ import {
 import { ArrowBackIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useSelector } from 'react-redux';
 
-function Parties() {
+function ItemsList() {
 
-    const { parties } = useSelector((state)=> state.party)
+    const { Items } = useSelector((state)=> state.item)
 
     return (
         <> 
@@ -29,10 +29,10 @@ function Parties() {
                         <ArrowBackIcon w={6} h={6} />
                     </Link> &nbsp;
                     <Heading as="h3" size="lg" color="gray.600">
-                        Parties
+                       Items
                     </Heading>
                     <Spacer />
-                    <Link to={'/create_parties'}>
+                    <Link to={'/create_items'}>
                         <Button mr={10} colorScheme='teal'>  Add New  &nbsp; ( + )</Button>
                     </Link>
                 </Flex>
@@ -44,24 +44,26 @@ function Parties() {
                     
                         <Thead bg="#f2f2f2">
                             <Tr>
-                                <Th> #</Th>
-                                <Th> Party Name</Th>
-                                <Th> Mobile Number </Th>
-                                <Th> Party Type  </Th>
-                                <Th> OPening Balance </Th>
+                            <Th> #</Th>
+                                <Th> Item Name</Th>
+                                <Th> Item Categories </Th>
+                                <Th> Item Code  </Th>
+                                <Th> Purchase Price </Th>
+                                <Th> Sales Price </Th>
                                 <Th> Act  </Th>
                             </Tr>
                         </Thead>
                         <Tbody>
-                        { parties &&
-                                parties.map((item, index)=>{                                  
+                        { Items &&
+                                Items.map((item, index)=>{                                  
                                     return( 
                                         <Tr key={index}>
                                             <Td>{index+1}</Td>                                        
-                                            <Td>{item.party_name}</Td>                                           
-                                            <Td>{item.mob_num}</Td>
-                                            <Td>{item.party_type.label}</Td>                                             
-                                            <Td>{item.open_bal}</Td>
+                                            <Td>{item.item_name}</Td>                                           
+                                            <Td>{item.category.label}</Td>
+                                            <Td>{item.item_code}</Td>                                             
+                                            <Td>{item.pur_price}</Td>
+                                            <Td>{item.sale_price}</Td>
                                             <Td>
                                                 <EditIcon/> &nbsp;  
                                                 <DeleteIcon/>                                           
@@ -82,4 +84,4 @@ function Parties() {
     )
 }
 
-export default Parties;
+export default ItemsList;

@@ -21,7 +21,11 @@ import {
 import { ArrowBackIcon, AddIcon } from "@chakra-ui/icons";
 import { Select } from "chakra-react-select";
 import { setItems } from "../../features/items"
-
+import {
+    useGetDataQuery,
+    useGetDataByIdQuery,
+    usePostDataMutation,
+  } from "../../service/newSliceApi";
 const Category = [
     {
         value: "cat1",
@@ -42,6 +46,8 @@ function ItemForm() {
 
     const navi = useNavigate();
     const dispatch = useDispatch();
+  const { data: studyData, isLoading, error } = useGetDataQuery();
+  const [postData] = usePostDataMutation();
 
     const {
         register,
@@ -51,9 +57,10 @@ function ItemForm() {
     } = useForm();
 
     const onSubmit = async (data) => {
-        console.log(data);
-        dispatch(setItems(data));
-        navi("/");
+        // console.log(JSON.stringify(data));
+        console.log(data)
+        postData(data);
+        navi("/items_list");
     }
 
     return (
@@ -61,14 +68,12 @@ function ItemForm() {
         <>
             <Box bg="white" p={5} mb={5} style={{ borderRadius: "10px" }}>
                 <Flex alignItems='center' gap={2}  >
-                    <Link to="/dashboard">
+                    <Link to="/items_list">
                         <ArrowBackIcon w={6} h={6} />
                     </Link> &nbsp;
                     <Heading as="h3" size="lg"  >
                         create Items
                     </Heading>
-                    <Spacer />
-
                 </Flex>
             </Box>
 
@@ -109,7 +114,7 @@ function ItemForm() {
                                                     placeholder="Enter Item Name"
                                                     {...register("item_name", {
                                                         required: "Item Name is Required",
-                                                    })}
+                                                    })}   
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.item_name && errors.item_name.message}
@@ -141,7 +146,8 @@ function ItemForm() {
                                                             getOptionLabel={(e) => e.label}
                                                             getOptionValue={(e) => e.value}
                                                             placeholder="Select Category"
-                                                            closeMenuOnSelect={true}
+                                                            closeMenuOnSelect={true} 
+                                                            
                                                         />
                                                         <FormErrorMessage>
                                                             {error && error.message}
@@ -154,18 +160,17 @@ function ItemForm() {
                                             <FormControl isInvalid={errors.item_code}>
                                                 <FormLabel  >Item Code </FormLabel>
                                                 <Input
-                                                    type="text"
+                                                    type="number"
                                                     placeholder="Enter Item Code"
                                                     {...register("item_code", {
                                                         required: "Item Code is Required",
-                                                    })}
+                                                    })}  
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.item_code && errors.item_code.message}
                                                 </FormErrorMessage>
                                             </FormControl>
                                         </GridItem>
-
                                     </Grid>
                                     <FormControl isInvalid={errors.description}>
                                         <FormLabel  > Description </FormLabel>
@@ -174,7 +179,7 @@ function ItemForm() {
                                             placeholder="Enter Description"
                                             {...register("description", {
                                                 required: "Description Code is Required",
-                                            })}
+                                            })}  
                                         />
                                         <FormErrorMessage>
                                             {errors.description && errors.description.message}
@@ -182,7 +187,6 @@ function ItemForm() {
                                     </FormControl>
                                 </Stack>
                             </Box>
-
                         </CardBody>
                     </Card>
                 </Box>
@@ -204,7 +208,7 @@ function ItemForm() {
                                                     placeholder="Enter Primary Unit "
                                                     {...register("pri_unit", {
                                                         required: "Primary Unit is Required",
-                                                    })}
+                                                    })}  
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.pri_unit && errors.pri_unit.message}
@@ -221,7 +225,7 @@ function ItemForm() {
                                                         placeholder="Conversation Rate"
                                                         {...register("conv_rate", {
                                                             required: "Conversation Rate is Required",
-                                                        })}
+                                                        })}   
                                                     />
                                                     <InputRightAddon children='LAD' />
                                                 </InputGroup>
@@ -238,7 +242,7 @@ function ItemForm() {
                                                     placeholder="Enter Secondary Unit"
                                                     {...register("sec_unit", {
                                                         required: " Secondary Unit is Required",
-                                                    })}
+                                                    })}   
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.sec_unit && errors.sec_unit.message}
@@ -252,7 +256,7 @@ function ItemForm() {
                                                     type="date"
                                                     {...register("stk_date", {
                                                         required: "Date is Required",
-                                                    })}
+                                                    })}  
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.stk_date && errors.stk_date.message}
@@ -268,7 +272,7 @@ function ItemForm() {
                                                         placeholder="Enter Opening Stocks "
                                                         {...register("open_stk", {
                                                             required: " Opening Stocks is Required",
-                                                        })}
+                                                        })}  
                                                     />
                                                     <InputRightAddon children='JAR' />
                                                 </InputGroup>
@@ -286,7 +290,7 @@ function ItemForm() {
                                                         placeholder="Enter Low Stock Unit"
                                                         {...register("low_stk_unit", {
                                                             required: "Low Stock Unit is Required",
-                                                        })}
+                                                        })}  
                                                     />
                                                     <InputRightAddon children='JAR' />
                                                 </InputGroup>
@@ -316,7 +320,7 @@ function ItemForm() {
                                                     placeholder="Enter Sales Price "
                                                     {...register("sale_price", {
                                                         required: "Sales Price is Required",
-                                                    })}
+                                                    })}  
 
                                                 />
                                                 <FormErrorMessage>
@@ -332,7 +336,7 @@ function ItemForm() {
                                                     placeholder="Enter Purchase Price"
                                                     {...register("pur_price", {
                                                         required: "Purchase Price is Required",
-                                                    })}
+                                                    })}  
 
                                                 />
                                                 <FormErrorMessage>
@@ -348,8 +352,8 @@ function ItemForm() {
                                                     placeholder="Enter HSN Code"
                                                     {...register("hsn_code", {
                                                         required: " HSN Code is Required",
-                                                    })}
-
+                                                    })}   
+ 
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.hsn_code && errors.hsn_code.message}
@@ -364,7 +368,7 @@ function ItemForm() {
                                                     placeholder="Enter GST Tax Rate"
                                                     {...register("gst_tax", {
                                                         required: "GST Tax Rate is Required",
-                                                    })}
+                                                    })}   
                                                 />
                                                 <FormErrorMessage>
                                                     {errors.gst_tax && errors.gst_tax.message}
@@ -386,8 +390,6 @@ function ItemForm() {
                         colorScheme="teal" onClick={handleSubmit(onSubmit)}> SUBMIT </Button>
                 </Stack>
             </Box>
-
-
         </>
     );
 }
